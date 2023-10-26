@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  my_front_end_test:
+    image: my_front_end3
+    container_name: my_front_end_test
+    networks:
+      - my_test_net
+    ports:
+      - "8080:5000"
+    volumes:
+      - ./static:/usr/src/app/static
+      - ./templates:/usr/src/app/templates
+
+networks:
+  my_test_net:

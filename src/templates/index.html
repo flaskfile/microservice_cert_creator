@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calibration report generator</title>
+</head>
+    <style>
+        li {
+            display: flex;
+            align-items: center;
+        }
+        form {
+            padding-left: 10px;
+        }
+    </style>
+<body>
+    <h2>RF source calibration certificate manager</h2>
+    <div>
+    <form action="/send_data" method="post" enctype="multipart/form-data">
+        <label for="source_serial">Serial Number (Format: snXXXX - snXXXXXX):</label><br>
+        <input type="text" id="source_serial" name="source_serial" pattern="[a-z]{2}[0-9]{4,6}" title="Please use the format snXXXX - snXXXXXX" required><br><br>
+<!--        <label for="source_serial">Source serial:</label><br>-->
+<!--        <input type="text" id="source_serial" name="source_serial"><br><br>-->
+        <label for="measure_date">Measured date:</label><br>
+        <input type="date" id="measure_date" name="measure_date" required><br><br>
+<!--        <input type="text" id="measure_date" name="measure_date"><br><br>-->
+        <label for="frequency">Frequency (GHz):</label><br>
+        <input type="text" id="frequency" name="frequency" required><br><br>
+        <label for="measure_dist">Measurement distance:</label><br>
+        <input type="text" id="measure_dist" name="measure_dist" required><br><br>
+        <label for="pspd_n">psPDn+:</label><br>
+        <input type="text" id="pspd_n" name="pspd_n" required><br><br>
+        <label for="pspd_tot">psPDtot+:</label><br>
+        <input type="text" id="pspd_tot" name="pspd_tot" required><br><br>
+        <label for="pspd_mod">psPDmod+:</label><br>
+        <input type="text" id="pspd_mod" name="pspd_mod" required><br><br>
+        <label for="file">Select image to upload:</label><br>
+        <input type="file" id= "file" name="file" />
+        <input type="submit" value="Submit">
+    </form>
+    </div>
+        <h2>Data available in the database</h2>
+            <button onclick="sortList('serial_number')">Sort by Serial Number</button>
+            <button onclick="sortList('measurement_date')">Sort by Measurement Date</button>
+    <ul>
+        {% for item in data %}
+            <li>
+                <form action="/delete" method="post">
+                    <input type="hidden" name="id" value="{{ item._id }}">
+                    <input type="submit" value="Delete">
+                </form>
+                <form action="/request_html" method="post">
+                    <input type="hidden" name="source_serial_to_send" value="{{ item._id }}">
+                    <input type="submit" value="Send to Receiver">
+                </form>
+                Serial Number: {{ item.serial_number }}, Measurement date: {{ item.measurement_date }}, Measurements: {{ item.measurements }}
+            </li>
+        {% endfor %}
+    </ul>
+    <script>
+    function sortList(sortBy) {
+        var list, i, switching, shouldSwitch, dir, switchcount = 0;
+        list = document.querySelector('ul');
+        switching = true;
+        dir = "asc";
+        while (switching) {
+            switching = false;
+            items = list.getElementsByTagName("li");
+            for (i = 0; i < (items.length - 1); i++) {
+                shouldSwitch = false;
+                var current = items[i].innerText.toLowerCase();
+                var next = items[i + 1].innerText.toLowerCase();
+                if (dir == "asc") {
+                    if (current > next) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (current < next) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                items[i].parentNode.insertBefore(items[i + 1], items[i]);
+                switching = true;
+                switchcount++;
+            } else {
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>
