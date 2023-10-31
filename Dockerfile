@@ -4,4 +4,4 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY src src
 EXPOSE 5000
-ENTRYPOINT ["python", "./src/front_end.py"]
+ENTRYPOINT ["python", "./src/front_end_kubernetes.py"]

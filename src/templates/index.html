@@ -37,7 +37,7 @@
         <label for="pspd_mod">psPDmod+:</label><br>
         <input type="text" id="pspd_mod" name="pspd_mod" required><br><br>
         <label for="file">Select image to upload:</label><br>
-        <input type="file" id= "file" name="file" />
+        <input type="file" id= "file" name="file" required/>
         <input type="submit" value="Submit">
     </form>
     </div>
@@ -53,9 +53,10 @@
                 </form>
                 <form action="/request_html" method="post">
                     <input type="hidden" name="source_serial_to_send" value="{{ item._id }}">
-                    <input type="submit" value="Send to Receiver">
+                    <input type="submit" value="Generate Cal Cert">
                 </form>
-                Serial Number: {{ item.serial_number }}, Measurement date: {{ item.measurement_date }}, Measurements: {{ item.measurements }}
+<!--                Serial Number: {{ item.serial_number }}, Measurement date: {{ item.measurement_date }}, Measurements: {{ item.measurements }}-->
+            Serial Number: {{ item.serial_number }}, Measurement date: {{ item.measurement_date }}, Frequency: {{ item.measurements.frequency }} GHz
             </li>
         {% endfor %}
     </ul>
