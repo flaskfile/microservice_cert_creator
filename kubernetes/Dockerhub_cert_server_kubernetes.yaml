@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: html-generator
+spec:
+  ports:
+    - name: http-cert
+      port: 5001
+      protocol: TCP
+  selector:
+    app: my-back-end
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-back-end-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-back-end
+  template:
+    metadata:
+      labels:
+        app: my-back-end
+    spec:
+      containers:
+      - name: my-back-end
+        image: nisses299/cert_server_html:0.15
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5001
